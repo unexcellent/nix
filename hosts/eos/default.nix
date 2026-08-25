@@ -4,6 +4,7 @@
     ./home-manager.nix
     ./packages.nix
     ./server.nix
+    ./starship.nix
     ./user-space.nix
     ./users.nix
   ];
