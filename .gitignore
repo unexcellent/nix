@@ -1,0 +1,7 @@
+.DS_Store
+result/
+result
+sandbox/
+flake.lock
+.claude/
+
