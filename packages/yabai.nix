@@ -1,14 +1,16 @@
 # Description
-{ pkgs, username, ... }: {
+{ pkgs, ... }: {
   environment.systemPackages = [ pkgs.yabai ];
 
-  home-manager.users."${username}" = {
-    nixpkgs.config.allowUnfree = true;
+  home-manager.sharedModules = [
+    {
+      nixpkgs.config.allowUnfree = true;
 
-    services.skhd = {
-      enable = true;
-      package = pkgs.skhd;
-    };
+      services.skhd = {
+        enable = true;
+        package = pkgs.skhd;
+      };
 
-  };
+    }
+  ];
 }

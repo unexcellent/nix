@@ -5,5 +5,6 @@
     ./packages.nix
     ./server.nix
     ./user-space.nix
+    ./users.nix
   ];
 }

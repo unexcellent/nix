@@ -17,6 +17,7 @@ in {
     "${package_dir}/python.nix"
     "${package_dir}/starship.nix"
     "${package_dir}/tree.nix"
+    "${package_dir}/user-brew.nix"
     "${package_dir}/zellij.nix"
     "${package_dir}/zsh.nix"
   ];

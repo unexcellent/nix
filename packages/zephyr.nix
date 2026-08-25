@@ -1,6 +1,5 @@
 {
   pkgs,
-  username,
   ...
 }: let
   # Zephyr SDK uses the arm-zephyr-eabi- prefix but the tools are identical to
@@ -25,9 +24,13 @@ in {
     pkgs.cargo-binutils
   ];
 
-  home-manager.users."${username}".programs.zsh.envExtra = ''
-    export ZEPHYR_SDK_INSTALL_DIR="$HOME/.zephyr-sdk"
-    export ZEPHYR_TOOLCHAIN_VARIANT=zephyr
-    export PATH="$HOME/.zephyr-sdk/gnu/arm-zephyr-eabi/bin:$PATH"
-  '';
+  home-manager.sharedModules = [
+    {
+      programs.zsh.envExtra = ''
+        export ZEPHYR_SDK_INSTALL_DIR="$HOME/.zephyr-sdk"
+        export ZEPHYR_TOOLCHAIN_VARIANT=zephyr
+        export PATH="$HOME/.zephyr-sdk/gnu/arm-zephyr-eabi/bin:$PATH"
+      '';
+    }
+  ];
 }

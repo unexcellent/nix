@@ -1,7 +1,6 @@
 # The python programming language
 {
   pkgs,
-  username,
   ...
 }: {
   environment.systemPackages = [
@@ -56,53 +55,57 @@
     '')
   ];
 
-  home-manager.users."${username}".programs = {
-    helix = {
-      languages = {
-        language = [
-          {
-            name = "python";
-            # Multiple LSPs (Pyright for types, Ruff for linting)
-            language-servers = ["pyright" "ruff"];
-            formatter = {
-              command = "${pkgs.ruff}/bin/ruff";
-              args = ["format" "-"];
+  home-manager.sharedModules = [
+    {
+      programs = {
+        helix = {
+          languages = {
+            language = [
+              {
+                name = "python";
+                # Multiple LSPs (Pyright for types, Ruff for linting)
+                language-servers = ["pyright" "ruff"];
+                formatter = {
+                  command = "${pkgs.ruff}/bin/ruff";
+                  args = ["format" "-"];
+                };
+                auto-format = true;
+              }
+            ];
+            language-server = {
+              pyright = {
+                command = "${pkgs.pyright}/bin/pyright-langserver";
+                args = ["--stdio"];
+              };
+              ruff = {
+                command = "${pkgs.ruff}/bin/ruff";
+                args = ["server"];
+              };
             };
-            auto-format = true;
-          }
-        ];
-        language-server = {
-          pyright = {
-            command = "${pkgs.pyright}/bin/pyright-langserver";
-            args = ["--stdio"];
           };
-          ruff = {
-            command = "${pkgs.ruff}/bin/ruff";
-            args = ["server"];
+        };
+
+        vscode.profiles.default = {
+          extensions = with pkgs.vscode-extensions; [
+            # Core python packages
+            ms-python.python # disabled until package is fixed
+            ms-python.debugpy
+
+            # Automatically generate docstring
+            njpwerner.autodocstring
+
+            # Modern python code linter and formatter
+            charliermarsh.ruff
+          ];
+
+          userSettings = {
+            # File patterns to exclude from the explorer view
+            "files.exclude" = {
+              "**/__pycache__" = true;
+            };
           };
         };
       };
-    };
-
-    vscode.profiles.default = {
-      extensions = with pkgs.vscode-extensions; [
-        # Core python packages
-        ms-python.python # disabled until package is fixed
-        ms-python.debugpy
-
-        # Automatically generate docstring
-        njpwerner.autodocstring
-
-        # Modern python code linter and formatter
-        charliermarsh.ruff
-      ];
-
-      userSettings = {
-        # File patterns to exclude from the explorer view
-        "files.exclude" = {
-          "**/__pycache__" = true;
-        };
-      };
-    };
-  };
+    }
+  ];
 }

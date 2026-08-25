@@ -1,45 +1,47 @@
 # The most used version control system in the world
-{ username, pkgs, ... }: {
-  home-manager.users."${username}" = {
-    programs.git = {
-      enable = true;
+{ pkgs, ... }: {
+  home-manager.sharedModules = [
+    {
+      programs.git = {
+        enable = true;
 
-      # Default .gitignores
-      ignores = [ "*.swp" ".DS_Store" ];
+        # Default .gitignores
+        ignores = [ "*.swp" ".DS_Store" ];
 
-      # If true, git large file system is enabled by default
-      lfs = { enable = true; };
+        # If true, git large file system is enabled by default
+        lfs = { enable = true; };
 
-      settings = {
-        # Set the default repo branch
-        init.defaultBranch = "main";
+        settings = {
+          # Set the default repo branch
+          init.defaultBranch = "main";
 
-        # Credentials
-        user = {
-          name = "unexcellent";
-          email = "";
+          # Credentials
+          user = {
+            name = "unexcellent";
+            email = "";
+          };
+
+          # Set up the builtin editor
+          core = { editor = "vim"; autocrlf = "input"; };
+
+          # If true, each branch is rebased after a push
+          pull.rebase = true;
+
+          # If true, changes are automatically stashed during a rebase
+          rebase.autoStash = true;
+
+          # If true, a branch is automatically set up at remote if a commit is pushed
+          push.autoSetupRemote = true;
         };
-
-        # Set up the builtin editor
-        core = { editor = "vim"; autocrlf = "input"; };
-
-        # If true, each branch is rebased after a push
-        pull.rebase = true;
-
-        # If true, changes are automatically stashed during a rebase
-        rebase.autoStash = true;
-
-        # If true, a branch is automatically set up at remote if a commit is pushed
-        push.autoSetupRemote = true;
       };
-    };
-  
-    # Shell aliases for common git commands
-    home.shellAliases = {
-      co = "git checkout";
-      pull = "git pull";
-    };
-  };
+
+      # Shell aliases for common git commands
+      home.shellAliases = {
+        co = "git checkout";
+        pull = "git pull";
+      };
+    }
+  ];
 
   # Scripts for simplifying git actions
   environment.systemPackages = [
