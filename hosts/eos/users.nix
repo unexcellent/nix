@@ -25,7 +25,7 @@ in {
   users.users = lib.mapAttrs (name: uid: {
     inherit name uid;
     home = "/Users/${name}";
-    shell = pkgs.zsh;
+    shell = pkgs.fish;
     createHome = true;
   }) serverUsers;
 

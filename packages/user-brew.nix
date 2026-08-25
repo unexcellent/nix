@@ -36,6 +36,14 @@
           eval "$(/opt/homebrew/bin/brew shellenv)"
         fi
       '';
+
+      programs.fish.interactiveShellInit = ''
+        if test -d $HOME/homebrew
+          $HOME/homebrew/bin/brew shellenv | source
+        else if test -x /opt/homebrew/bin/brew
+          /opt/homebrew/bin/brew shellenv | source
+        end
+      '';
     }
   ];
 }
