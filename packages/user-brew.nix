@@ -35,6 +35,8 @@
         elif [[ -x /opt/homebrew/bin/brew ]]; then
           eval "$(/opt/homebrew/bin/brew shellenv)"
         fi
+        # brew shellenv prepends to PATH; nix-installed tools must win over brew
+        export PATH="$HOME/.nix-profile/bin:/etc/profiles/per-user/$USER/bin:/run/current-system/sw/bin:$PATH"
       '';
 
       programs.fish.interactiveShellInit = ''
@@ -43,6 +45,8 @@
         else if test -x /opt/homebrew/bin/brew
           /opt/homebrew/bin/brew shellenv | source
         end
+        # brew shellenv prepends to PATH; nix-installed tools must win over brew
+        fish_add_path --move --prepend $HOME/.nix-profile/bin /etc/profiles/per-user/$USER/bin /run/current-system/sw/bin
       '';
     }
   ];

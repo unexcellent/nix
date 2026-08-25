@@ -3,6 +3,7 @@
   imports = [
     ./home-manager.nix
     ./packages.nix
+    ./podman.nix
     ./server.nix
     ./starship.nix
     ./user-space.nix
