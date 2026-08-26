@@ -19,9 +19,12 @@
   launchd.daemons.podman-machine = {
     script = ''
       podman=/run/current-system/sw/bin/podman
+      # At boot this daemon can fire before nix-darwin's activation has
+      # restored /run/current-system; wait until the binary exists.
+      /bin/wait4path "$podman"
       # Only start from a clean "stopped" state; never pile onto a start that
       # is already in progress ("starting"), e.g. one triggered manually.
-      if [ "$($podman machine inspect --format '{{.State}}' 2>/dev/null)" = "stopped" ]; then
+      if [ "$($podman machine inspect --format '{{.State}}')" = "stopped" ]; then
         $podman machine start
       fi
     '';

@@ -6,6 +6,7 @@
 {pkgs, ...}: {
   environment.systemPackages = [
     pkgs.podman
+    pkgs.podman-coompose
   ];
 
   home-manager.sharedModules = [
