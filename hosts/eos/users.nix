@@ -10,7 +10,7 @@
 # via home-manager.sharedModules and can install additional packages on their own:
 #   nix profile install nixpkgs#<pkg>   # per-user nix packages
 #   brew-init && brew install <pkg>     # per-user Homebrew in ~/homebrew
-{ pkgs, lib, ... }:
+{ pkgs, lib, username, ... }:
 let
   # name = uid; uids must be > 501 (502, 503, ...). The primary "admin" user
   # (uid 501) is created during macOS setup and managed in
@@ -35,4 +35,15 @@ in {
     programs.home-manager.enable = true;
     home.stateVersion = "24.05";
   }) serverUsers;
+
+  # The primary user predates nix and must not be in knownUsers, so nix-darwin
+  # never touches its login shell. Enforce fish for it here instead
+  # (activation runs as root, so dscl works and no chsh is needed).
+  system.activationScripts.postActivation.text = ''
+    fish=/run/current-system/sw/bin/fish
+    if [ "$(dscl . -read /Users/${username} UserShell 2>/dev/null | awk '{print $2}')" != "$fish" ]; then
+      echo "setting login shell of ${username} to fish"
+      dscl . -create /Users/${username} UserShell "$fish"
+    fi
+  '';
 }

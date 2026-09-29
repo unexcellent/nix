@@ -29,6 +29,14 @@
             language-server = {
               rust-analyzer = {
                 command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
+                config = {
+                  # Separate target dir (target/rust-analyzer) so cargo builds
+                  # and rust-analyzer don't block on each other's lock or
+                  # invalidate each other's cache.
+                  cargo.targetDir = true;
+                  # Don't check tests/examples; they don't build on no_std targets.
+                  check.allTargets = false;
+                };
               };
             };
           };
