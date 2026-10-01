@@ -4,6 +4,7 @@
     ./dock.nix
     ./home-manager.nix
     ./packages.nix
+    ./starship.nix
     ./user-space.nix
   ];
 }
