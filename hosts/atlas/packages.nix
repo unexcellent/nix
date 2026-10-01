@@ -24,7 +24,7 @@ in {
     "${package_dir}/firefox.nix"
     "${package_dir}/fish.nix"
     "${package_dir}/git.nix"
-    # "${package_dir}/github.nix"
+    "${package_dir}/github.nix"
     "${package_dir}/gitui.nix"
     "${package_dir}/ghostty.nix"
     "${package_dir}/helix.nix"
