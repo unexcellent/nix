@@ -37,6 +37,11 @@
         fi
         # brew shellenv prepends to PATH; nix-installed tools must win over brew
         export PATH="$HOME/.nix-profile/bin:/etc/profiles/per-user/$USER/bin:/run/current-system/sw/bin:$PATH"
+        # nix-homebrew's launcher in /run/current-system/sw/bin always targets
+        # /opt/homebrew and would shadow the per-user brew
+        if [[ -d "$HOME/homebrew" ]]; then
+          brew() { "$HOME/homebrew/bin/brew" "$@"; }
+        fi
       '';
 
       programs.fish.interactiveShellInit = ''
@@ -47,6 +52,13 @@
         end
         # brew shellenv prepends to PATH; nix-installed tools must win over brew
         fish_add_path --move --prepend $HOME/.nix-profile/bin /etc/profiles/per-user/$USER/bin /run/current-system/sw/bin
+        # nix-homebrew's launcher in /run/current-system/sw/bin always targets
+        # /opt/homebrew and would shadow the per-user brew
+        if test -d $HOME/homebrew
+          function brew
+            $HOME/homebrew/bin/brew $argv
+          end
+        end
       '';
     }
   ];
