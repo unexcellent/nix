@@ -44,6 +44,7 @@ in {
     "${package_dir}/rust.nix"
     "${package_dir}/slack.nix"
     "${package_dir}/starship.nix"
+    "${package_dir}/stats.nix"
     "${package_dir}/tree.nix"
     "${package_dir}/typst.nix"
     "${package_dir}/vscode.nix"
