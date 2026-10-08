@@ -9,7 +9,7 @@
         # from timing out
         command_timeout = 1000;
 
-        format = "$username$hostname\${custom.ip_address}$directory$git_branch$git_status$python\n$character";
+        format = "$username$hostname\${custom.ip_address}$directory$git_branch$git_status$python\${custom.ram}\n$character";
 
         username = {
           show_always = true;
@@ -36,6 +36,18 @@
         python = {
           symbol = "🐍 ";
           format = "via [\${symbol}\${version} (\\($virtualenv\\))]($style) ";
+        };
+
+        # Starship's memory_usage only offers whole percentages. "Used" matches
+        # Activity Monitor: active + wired + compressed pages.
+        custom.ram = {
+          command = ''
+            vm_stat | awk -v total="$(sysctl -n hw.memsize)" '/page size of/ {ps=$8} /Pages active/ {a=$3} /Pages wired down/ {w=$4} /Pages occupied by compressor/ {c=$5} END {printf "%.1f", (a+w+c)*ps/total*100}'
+          '';
+          when = "true";
+          shell = "bash";
+          style = "bold dimmed white";
+          format = "uses [$output% RAM]($style) ";
         };
 
         package = {
