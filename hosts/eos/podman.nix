@@ -24,12 +24,23 @@
       /bin/wait4path "$podman"
       # Only start from a clean "stopped" state; never pile onto a start that
       # is already in progress ("starting"), e.g. one triggered manually.
-      if [ "$($podman machine inspect --format '{{.State}}')" = "stopped" ]; then
+      state=$($podman machine inspect --format '{{.State}}')
+      if [ "$state" = "stopped" ]; then
         $podman machine start
+        state=$($podman machine inspect --format '{{.State}}')
+      fi
+      # podman-restart.service is disabled inside the VM, so nothing honours
+      # restart policies after the VM boots. Also runs on every interval tick
+      # to revive containers that stopped while the VM kept running.
+      if [ "$state" = "running" ]; then
+        $podman start --all --filter restart-policy=unless-stopped
       fi
     '';
     serviceConfig = {
       UserName = username;
+      # `podman machine start` leaves vfkit and gvproxy running in the
+      # background; without this launchd kills them once the script exits.
+      AbandonProcessGroup = true;
       RunAtLoad = true;
       StartInterval = 300;
       EnvironmentVariables.HOME = "/Users/${username}";
